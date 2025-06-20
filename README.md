@@ -4,6 +4,13 @@ This is a simple PHP-based login and user management system with MySQL integrati
 
 ---
 
+## 👥 Authors
+
+- [@rjpatane1173](https://github.com/rjpatane1173)
+- [@HarshvardhanT42](https://github.com/HarshvardhanT42)
+
+
+
 ## 🚀 Features
 
 - User Registration and Login
