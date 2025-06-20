@@ -1,0 +1,31 @@
+
+---
+
+### 🗂️ `.gitignore`
+
+```gitignore
+# Ignore environment and config files
+.env
+*.log
+*.bak
+*.db
+
+# OS-specific
+.DS_Store
+Thumbs.db
+
+# IDE-specific
+.idea/
+.vscode/
+
+# Dependency folders
+node_modules/
+vendor/
+
+# Backup files
+*.zip
+*.tar
+*.gz
+
+# Ignore sensitive user uploads (if any)
+uploads/

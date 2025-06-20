@@ -1,0 +1,1170 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>PMPML E-Ticket System</title>
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css"
+    />
+    <style>
+      @import url("https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,400;0,500;1,300&display=swap");
+
+      :root {
+        --green: green;
+        --darkgreen: #013220;
+        --black: #130f40;
+        --light-color: #666;
+        --box-shadow: 0 0.1rem 1rem rgba(0, 0, 0.1);
+        --border: 2rem solid rgba(0, 0, 0.1);
+        --outline: 0.1rem solid rgba(0, 0, 0.1);
+      }
+
+      * {
+        font-family: "Poppins", sans-serif;
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+        outline: none;
+        text-decoration: none;
+        text-transform: capitalize;
+        transition: all 0.2s linear;
+      }
+
+      html {
+        font-size: 62.5%;
+        scroll-behavior: smooth;
+        scroll-padding-top: 7rem;
+      }
+
+      body {
+        background: #f5f5f5;
+        overflow-x: hidden;
+      }
+
+      .main-content {
+        background-color: white;
+        padding: 2rem;
+        margin-top: 10vh;
+        margin-bottom: 15vh;
+        font-size: 1.6rem;
+        min-height: 70vh;
+        padding: 2rem;
+      }
+
+      .header,
+      .footer {
+        position: fixed;
+        width: 100%;
+        background: #4cbb17;
+        box-shadow: var(--box-shadow);
+        z-index: 1000;
+      }
+
+      .header {
+        height: 10vh;
+        top: 0;
+        left: 0;
+        padding: 1rem 5%;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+      }
+
+      .footer {
+        height: 10vh;
+        bottom: 0;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+      }
+
+      .header .header-content {
+        display: flex;
+        align-items: center;
+        width: 100%;
+        justify-content: space-between;
+      }
+
+      .header .title {
+        font-size: 2.5rem;
+        margin-left: 1rem;
+        font-weight: bold;
+        color: white;
+      }
+
+      .header img.logo {
+        height: 8vh;
+        width: auto;
+        border-radius: 50%;
+        object-fit: contain;
+      }
+
+      .header .icon div {
+        height: 4.5rem;
+        width: 4.5rem;
+        line-height: 4.5rem;
+        border-radius: 0.5rem;
+        background: #eee;
+        color: var(--black);
+        font-size: 2rem;
+        margin-right: 0.3rem;
+        text-align: center;
+        cursor: pointer;
+      }
+
+      .header .icon div:hover {
+        background: var(--green);
+        color: white;
+      }
+
+      #menu-btn {
+        display: none;
+      }
+
+      .footer .navbar {
+        height: 100%;
+        display: flex;
+        align-items: center;
+        overflow-x: auto;
+        overflow-y: hidden;
+        white-space: nowrap;
+        padding: 0 2rem;
+      }
+
+      .footer .navbar a {
+        font-size: 1.6rem;
+        margin: 0 1.5rem;
+        color: white;
+        font-weight: bold;
+        position: relative;
+        padding: 0.5rem 1rem;
+        border-radius: 0.5rem;
+      }
+
+      .footer .navbar a:hover {
+        background-color: rgba(255, 255, 255, 0.2);
+      }
+
+      /* Form Styles */
+      .form-container {
+        max-width: 600px;
+        margin: 0 auto;
+        padding: 2rem;
+        background: white;
+        border-radius: 1rem;
+        box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.1);
+      }
+
+      .form-group {
+        margin-bottom: 2rem;
+      }
+
+      label {
+        display: block;
+        margin-bottom: 0.5rem;
+        font-weight: bold;
+        color: var(--black);
+      }
+
+      select,
+      input {
+        width: 100%;
+        padding: 1rem;
+        border: 1px solid #ddd;
+        border-radius: 0.5rem;
+        font-size: 1.6rem;
+      }
+
+      button {
+        background-color: var(--green);
+        color: white;
+        border: none;
+        padding: 1rem 2rem;
+        border-radius: 0.5rem;
+        font-size: 1.6rem;
+        cursor: pointer;
+        transition: background-color 0.3s;
+        margin: 1rem 0;
+      }
+
+      button:hover {
+        background-color: var(--darkgreen);
+      }
+
+      .btn-block {
+        display: block;
+        width: 100%;
+      }
+
+      /* Bus List Styles */
+      .bus-list {
+        margin-top: 2rem;
+      }
+
+      .bus-card {
+        background: white;
+        border-radius: 0.5rem;
+        padding: 1.5rem;
+        margin-bottom: 1rem;
+        box-shadow: 0 0.2rem 0.5rem rgba(0, 0, 0, 0.1);
+        border-left: 0.4rem solid var(--green);
+      }
+
+      .bus-card h3 {
+        color: var(--green);
+        margin-bottom: 0.5rem;
+      }
+
+      .bus-card p {
+        margin-bottom: 0.5rem;
+      }
+
+      /* Ticket Preview Styles */
+      .ticket-preview {
+        background: white;
+        border-radius: 0.5rem;
+        padding: 2rem;
+        margin-top: 2rem;
+        box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.1);
+        border: 1px solid var(--green);
+      }
+
+      .ticket-preview h2 {
+        color: var(--green);
+        margin-bottom: 1rem;
+        text-align: center;
+      }
+
+      .ticket-preview .ticket-details {
+        margin-bottom: 1.5rem;
+      }
+
+      .ticket-preview .ticket-details p {
+        margin-bottom: 0.5rem;
+        display: flex;
+        justify-content: space-between;
+      }
+
+      .ticket-preview .ticket-details p span:first-child {
+        font-weight: bold;
+      }
+
+      /* Passenger Selection */
+      .passenger-selection {
+        display: flex;
+        justify-content: space-between;
+        margin: 1rem 0;
+      }
+
+      .passenger-selection button {
+        flex: 1;
+        margin: 0 0.5rem;
+        padding: 0.5rem;
+      }
+
+      /* Responsive Styles */
+      @media (max-width: 768px) {
+        .header .title {
+          font-size: 2rem;
+        }
+
+        .footer .navbar a {
+          font-size: 1.4rem;
+          margin: 0 1rem;
+        }
+
+        .form-container {
+          padding: 1rem;
+        }
+      }
+
+      /* Animation */
+      @keyframes fadeIn {
+        from {
+          opacity: 0;
+          transform: translateY(20px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+
+      .fade-in {
+        animation: fadeIn 0.5s ease-out forwards;
+      }
+
+      /* Loading Spinner */
+      .spinner {
+        border: 4px solid rgba(0, 0, 0, 0.1);
+        border-radius: 50%;
+        border-top: 4px solid var(--green);
+        width: 30px;
+        height: 30px;
+        animation: spin 1s linear infinite;
+        margin: 20px auto;
+      }
+
+      @keyframes spin {
+        0% {
+          transform: rotate(0deg);
+        }
+        100% {
+          transform: rotate(360deg);
+        }
+      }
+
+      /* Hidden elements */
+      .hidden {
+        display: none !important;
+      }
+
+      /* Success message */
+      .success-message {
+        text-align: center;
+        color: var(--green);
+        font-size: 1.8rem;
+        margin: 2rem 0;
+      }
+
+      /* QR Code */
+      .qr-code {
+        text-align: center;
+        margin: 2rem 0;
+      }
+
+      .qr-code img {
+        max-width: 200px;
+        height: auto;
+      }
+    </style>
+  </head>
+  <body>
+    <!-- Header -->
+    <header class="header">
+      <div class="header-content">
+        <img src="download.jpg" class="logo" alt="PMPML Logo" />
+        <span class="title">E-Ticket</span>
+        <div class="icon">
+          <div class="fa fa-bars" id="menu-btn"></div>
+        </div>
+      </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="main-content">
+      <!-- Regular Ticket Section -->
+      <div id="regularTicketContent" class="form-container">
+        <h2>Book Regular Ticket</h2>
+        <div class="form-group">
+          <label for="boardingStop">Boarding Stop:</label>
+          <select id="boardingStop" class="form-control">
+            <!-- Options will be populated dynamically -->
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label for="destinationStop">Destination Stop:</label>
+          <select id="destinationStop" class="form-control">
+            <!-- Options will be populated dynamically -->
+          </select>
+        </div>
+
+        <button
+          id="showBusesBtn"
+          class="btn-block"
+          onclick="showAvailableBuses()"
+        >
+          Show Available Buses
+        </button>
+
+        <div id="loadingBuses" class="spinner hidden"></div>
+
+        <div id="availableBuses" class="bus-list hidden">
+          <!-- Bus information will be displayed here -->
+        </div>
+
+        <div id="adultsContainer" class="hidden">
+          <h3>Select Number of Passengers</h3>
+          <div class="passenger-selection">
+            <!-- Buttons will be added dynamically -->
+          </div>
+        </div>
+
+        <div id="ticketInfo" class="ticket-preview hidden">
+          <!-- Ticket preview will be shown here -->
+        </div>
+
+        <div id="passwordContainer" class="form-group hidden">
+          <!-- Password input will be shown here -->
+        </div>
+
+        <button
+          id="confirmTicketBtn"
+          class="btn-block hidden"
+          onclick="confirmTicket()"
+        >
+          Confirm Ticket
+        </button>
+
+        <div id="ticketSuccess" class="success-message hidden">
+          <i
+            class="fa fa-check-circle"
+            style="font-size: 4rem; color: green"
+          ></i>
+          <h3>Ticket Booked Successfully!</h3>
+          <div id="ticketDetails"></div>
+          <div class="qr-code">
+            <img
+              src="https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=TicketConfirmed"
+              alt="QR Code"
+            />
+          </div>
+          <p>Show this QR code to the conductor</p>
+        </div>
+      </div>
+
+      <!-- Pass Section -->
+      <div id="passContent" class="form-container hidden">
+        <h2>Book Daily Pass</h2>
+        <form id="passForm">
+          <div class="form-group">
+            <label for="gender">Gender:</label>
+            <select id="gender" name="gender" class="form-control">
+              <option value="male">Male</option>
+              <option value="female">Female</option>
+              <option value="other">Other</option>
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label for="area">Area:</label>
+            <select id="area" name="area" class="form-control">
+              <option value="PMC">PMC Area (₹40)</option>
+              <option value="PCMC">PCMC Area (₹40)</option>
+              <option value="Both">Both PMC & PCMC (₹50)</option>
+              <option value="All">All Routes (₹70)</option>
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label for="idProof">Last Four Digits of ID Proof:</label>
+            <input
+              type="text"
+              id="idProof"
+              name="idProof"
+              maxlength="4"
+              class="form-control"
+              pattern="\d{4}"
+              required
+            />
+          </div>
+
+          <button type="submit" class="btn-block">Preview Pass</button>
+        </form>
+
+        <div id="passPreview" class="ticket-preview hidden">
+          <h2>Pass Preview</h2>
+          <div class="ticket-details">
+            <p><span>Gender:</span> <span id="previewGender"></span></p>
+            <p><span>Area:</span> <span id="previewArea"></span></p>
+            <p><span>Fare:</span> <span id="previewFare"></span></p>
+            <p><span>ID Proof:</span> <span id="previewIdProof"></span></p>
+          </div>
+        </div>
+
+        <div id="passPasswordContainer" class="form-group hidden">
+          <label for="passPassword">Enter Password (1173):</label>
+          <input
+            type="password"
+            id="passPassword"
+            class="form-control"
+            required
+          />
+          <button
+            id="confirmPassBtn"
+            class="btn-block"
+            onclick="confirmPassBooking()"
+          >
+            Confirm Booking
+          </button>
+        </div>
+
+        <div id="passSuccess" class="success-message hidden">
+          <i
+            class="fa fa-check-circle"
+            style="font-size: 4rem; color: green"
+          ></i>
+          <h3>Pass Booked Successfully!</h3>
+          <div id="passDetails"></div>
+          <div class="qr-code">
+            <img
+              src="https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=PassConfirmed"
+              alt="QR Code"
+            />
+          </div>
+          <p>Show this QR code to the conductor</p>
+        </div>
+      </div>
+
+      <!-- My Tickets Section -->
+      <div id="myTicketsContent" class="form-container hidden">
+        <h2>My Tickets</h2>
+        <div id="ticketsList">
+          <!-- Tickets will be displayed here -->
+          <p class="no-tickets">
+            No tickets found. Book a ticket to see them here.
+          </p>
+        </div>
+      </div>
+
+      <!-- Tutorial Section -->
+      <div id="tutorialContent" class="form-container hidden">
+        <h2>How to Use E-Ticket</h2>
+        <div class="tutorial-steps">
+          <div class="step">
+            <h3>1. Select Your Stops</h3>
+            <p>
+              Choose your boarding and destination stops from the dropdown
+              menus.
+            </p>
+          </div>
+          <div class="step">
+            <h3>2. View Available Buses</h3>
+            <p>Click "Show Available Buses" to see buses serving your route.</p>
+          </div>
+          <div class="step">
+            <h3>3. Select Passengers</h3>
+            <p>Choose how many passengers are traveling.</p>
+          </div>
+          <div class="step">
+            <h3>4. Confirm Ticket</h3>
+            <p>Review your ticket details and confirm your booking.</p>
+          </div>
+          <div class="step">
+            <h3>5. Show QR Code</h3>
+            <p>Present the QR code to the bus conductor when boarding.</p>
+          </div>
+        </div>
+      </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="footer">
+      <nav class="navbar">
+        <a href="#" onclick="showRegularTicketContent()"
+          ><i class="fa fa-ticket"></i> Ticket</a
+        >
+        <a href="#" onclick="showPassForm()"
+          ><i class="fa fa-id-card"></i> Pass</a
+        >
+        <a href="#" onclick="showMyTickets()"
+          ><i class="fa fa-list"></i> My Tickets</a
+        >
+        <a href="#" onclick="showTutorial()"
+          ><i class="fa fa-question-circle"></i> Help</a
+        >
+        <a href="https://pmpml.org"><i class="fa fa-phone"></i> Contact</a>
+      </nav>
+    </footer>
+
+    <script>
+      // Global variables
+      let availableBusNames = [];
+      let currentTicket = null;
+      let currentPass = null;
+
+      // DOM Content Loaded
+      document.addEventListener("DOMContentLoaded", function () {
+        // Initialize the app
+        initApp();
+
+        // Show regular ticket content by default
+        showRegularTicketContent();
+      });
+
+      function initApp() {
+        // Initialize stops dropdowns
+        initStopsDropdowns();
+
+        // Initialize event listeners
+        initEventListeners();
+
+        // Load any saved tickets from localStorage
+        loadSavedTickets();
+      }
+
+      function initStopsDropdowns() {
+        const boardingSelect = document.getElementById("boardingStop");
+        const destinationSelect = document.getElementById("destinationStop");
+
+        // Clear existing options
+        boardingSelect.innerHTML = "";
+        destinationSelect.innerHTML = "";
+
+        // Add default option
+        const defaultOption = document.createElement("option");
+        defaultOption.value = "";
+        defaultOption.textContent = "-- Select Stop --";
+        defaultOption.disabled = true;
+        defaultOption.selected = true;
+        boardingSelect.appendChild(defaultOption.cloneNode(true));
+        destinationSelect.appendChild(defaultOption.cloneNode(true));
+
+        // Add stops from dataset
+        stops.forEach((stop) => {
+          const option = document.createElement("option");
+          option.value = stop;
+          option.textContent = stop;
+          boardingSelect.appendChild(option);
+
+          // Don't add to destination yet - it will be populated based on boarding selection
+        });
+
+        // Event listener for boarding stop change
+        boardingSelect.addEventListener("change", function () {
+          const boardingStop = this.value;
+          populateDestinationOptions(boardingStop);
+        });
+      }
+
+      function populateDestinationOptions(boardingStop) {
+        const destinationSelect = document.getElementById("destinationStop");
+
+        // Clear existing options except the first one
+        while (destinationSelect.options.length > 1) {
+          destinationSelect.remove(1);
+        }
+
+        if (!boardingStop) return;
+
+        // Filter stops that can be reached from boarding stop
+        const reachableStops = stops.filter(
+          (stop) =>
+            stop !== boardingStop &&
+            canReachDestinationFromBoarding(boardingStop, stop)
+        );
+
+        if (reachableStops.length === 0) {
+          const option = document.createElement("option");
+          option.value = "";
+          option.textContent = "No destinations available";
+          option.disabled = true;
+          destinationSelect.appendChild(option);
+          return;
+        }
+
+        // Add reachable stops
+        reachableStops.forEach((stop) => {
+          const option = document.createElement("option");
+          option.value = stop;
+          option.textContent = stop;
+          destinationSelect.appendChild(option);
+        });
+      }
+
+      function canReachDestinationFromBoarding(boardingStop, destinationStop) {
+        return availableBuses.some(
+          (bus) =>
+            bus.route.includes(boardingStop) &&
+            bus.route.includes(destinationStop)
+        );
+      }
+
+      function initEventListeners() {
+        // Pass form submission
+        document
+          .getElementById("passForm")
+          .addEventListener("submit", function (e) {
+            e.preventDefault();
+            previewPass();
+          });
+      }
+
+      // Navigation functions
+      function showRegularTicketContent() {
+        hideAllSections();
+        document
+          .getElementById("regularTicketContent")
+          .classList.remove("hidden");
+        document.querySelector(".navbar a:nth-child(1)").style.backgroundColor =
+          "rgba(255, 255, 255, 0.3)";
+      }
+
+      function showPassForm() {
+        hideAllSections();
+        document.getElementById("passContent").classList.remove("hidden");
+        document.querySelector(".navbar a:nth-child(2)").style.backgroundColor =
+          "rgba(255, 255, 255, 0.3)";
+      }
+
+      function showMyTickets() {
+        hideAllSections();
+        document.getElementById("myTicketsContent").classList.remove("hidden");
+        document.querySelector(".navbar a:nth-child(3)").style.backgroundColor =
+          "rgba(255, 255, 255, 0.3)";
+        displaySavedTickets();
+      }
+
+      function showTutorial() {
+        hideAllSections();
+        document.getElementById("tutorialContent").classList.remove("hidden");
+        document.querySelector(".navbar a:nth-child(4)").style.backgroundColor =
+          "rgba(255, 255, 255, 0.3)";
+      }
+
+      function hideAllSections() {
+        const sections = document.querySelectorAll(".form-container");
+        sections.forEach((section) => section.classList.add("hidden"));
+
+        const navItems = document.querySelectorAll(".navbar a");
+        navItems.forEach(
+          (item) => (item.style.backgroundColor = "transparent")
+        );
+      }
+
+      // Ticket booking functions
+      function showAvailableBuses() {
+        const boardingStop = document.getElementById("boardingStop").value;
+        const destinationStop =
+          document.getElementById("destinationStop").value;
+
+        if (!boardingStop || !destinationStop) {
+          alert("Please select both boarding and destination stops");
+          return;
+        }
+
+        // Show loading spinner
+        document.getElementById("loadingBuses").classList.remove("hidden");
+        document.getElementById("availableBuses").classList.add("hidden");
+
+        // Reset availableBusNames
+        availableBusNames = [];
+
+        // Simulate API call with timeout
+        setTimeout(() => {
+          const filteredBuses = availableBuses.filter(
+            (bus) =>
+              bus.route.includes(boardingStop) &&
+              bus.route.includes(destinationStop)
+          );
+
+          const busList = document.getElementById("availableBuses");
+          busList.innerHTML = "";
+
+          if (filteredBuses.length > 0) {
+            const heading = document.createElement("h3");
+            heading.textContent = "Available Buses";
+            busList.appendChild(heading);
+
+            filteredBuses.forEach((bus) => {
+              const fare = calculateFare(boardingStop, destinationStop, bus);
+
+              const busCard = document.createElement("div");
+              busCard.className = "bus-card fade-in";
+
+              busCard.innerHTML = `
+                <h3>${bus.name}</h3>
+                <p><strong>Route:</strong> ${bus.route[0]} to ${
+                bus.route[bus.route.length - 1]
+              }</p>
+                <p><strong>Fare:</strong> ₹${fare}</p>
+                <button onclick="chooseAdults('${
+                  bus.name
+                }', '${boardingStop}', '${destinationStop}', ${fare})">
+                  Book This Bus
+                </button>
+              `;
+
+              busList.appendChild(busCard);
+              availableBusNames.push(bus.name);
+            });
+          } else {
+            busList.innerHTML =
+              '<p class="no-buses">No buses available for the selected route.</p>';
+          }
+
+          // Hide loading spinner and show results
+          document.getElementById("loadingBuses").classList.add("hidden");
+          busList.classList.remove("hidden");
+        }, 800);
+      }
+
+      function calculateFare(boardingStop, destinationStop, bus) {
+        // First try direct combination
+        const fareKey = `${boardingStop}-${destinationStop}`;
+        if (bus.fares[fareKey]) {
+          return bus.fares[fareKey];
+        }
+
+        // Try reverse combination
+        const reverseFareKey = `${destinationStop}-${boardingStop}`;
+        if (bus.fares[reverseFareKey]) {
+          return bus.fares[reverseFareKey];
+        }
+
+        // If no direct fare, calculate based on stops passed
+        const boardingIndex = bus.route.indexOf(boardingStop);
+        const destinationIndex = bus.route.indexOf(destinationStop);
+
+        if (boardingIndex === -1 || destinationIndex === -1) {
+          return 10; // Default minimum fare
+        }
+
+        const stopsPassed = Math.abs(destinationIndex - boardingIndex);
+        return Math.min(10 + stopsPassed * 2, 50); // Cap at 50
+      }
+
+      function chooseAdults(busName, boardingStop, destinationStop, fare) {
+        const adultsContainer = document.getElementById("adultsContainer");
+        adultsContainer.innerHTML =
+          '<h3>Select Number of Passengers</h3><div class="passenger-selection"></div>';
+
+        const passengerSelection = adultsContainer.querySelector(
+          ".passenger-selection"
+        );
+
+        // Create buttons for 1-5 passengers
+        for (let i = 1; i <= 5; i++) {
+          const button = document.createElement("button");
+          button.textContent = i;
+          button.addEventListener("click", function () {
+            showTicketPreview(busName, boardingStop, destinationStop, fare, i);
+          });
+          passengerSelection.appendChild(button);
+        }
+
+        adultsContainer.classList.remove("hidden");
+      }
+
+      function showTicketPreview(
+        busName,
+        boardingStop,
+        destinationStop,
+        fare,
+        adults
+      ) {
+        const totalFare = fare * adults;
+        currentTicket = {
+          busName,
+          boardingStop,
+          destinationStop,
+          fare,
+          adults,
+          totalFare,
+          date: new Date().toLocaleString(),
+        };
+
+        const ticketInfo = document.getElementById("ticketInfo");
+        ticketInfo.innerHTML = `
+          <h2>Ticket Preview</h2>
+          <div class="ticket-details">
+            <p><span>Bus:</span> <span>${busName}</span></p>
+            <p><span>From:</span> <span>${boardingStop}</span></p>
+            <p><span>To:</span> <span>${destinationStop}</span></p>
+            <p><span>Passengers:</span> <span>${adults}</span></p>
+            <p><span>Fare per person:</span> <span>₹${fare}</span></p>
+            <p><span>Total Fare:</span> <span>₹${totalFare}</span></p>
+          </div>
+        `;
+
+        ticketInfo.classList.remove("hidden");
+        document.getElementById("confirmTicketBtn").classList.remove("hidden");
+      }
+
+      function confirmTicket() {
+        if (!currentTicket) return;
+
+        // Show password input
+        const passwordContainer = document.getElementById("passwordContainer");
+        passwordContainer.innerHTML = `
+          <label for="ticketPassword">Enter Password (1173):</label>
+          <input type="password" id="ticketPassword" class="form-control" required>
+          <button onclick="verifyTicketPassword()" class="btn-block">Submit</button>
+        `;
+        passwordContainer.classList.remove("hidden");
+      }
+
+      function verifyTicketPassword() {
+        const password = document.getElementById("ticketPassword").value;
+
+        if (password === "1173") {
+          completeTicketBooking();
+        } else {
+          alert("Incorrect password. Please try again.");
+        }
+      }
+
+      function completeTicketBooking() {
+        if (!currentTicket) return;
+
+        // Save ticket to localStorage
+        saveTicket(currentTicket);
+
+        // Show success message
+        document
+          .getElementById("regularTicketContent")
+          .querySelectorAll(".hidden")
+          .forEach((el) => {
+            el.classList.add("hidden");
+          });
+
+        const ticketSuccess = document.getElementById("ticketSuccess");
+        const ticketDetails = document.getElementById("ticketDetails");
+
+        ticketDetails.innerHTML = `
+          <p><strong>Bus:</strong> ${currentTicket.busName}</p>
+          <p><strong>From:</strong> ${currentTicket.boardingStop}</p>
+          <p><strong>To:</strong> ${currentTicket.destinationStop}</p>
+          <p><strong>Passengers:</strong> ${currentTicket.adults}</p>
+          <p><strong>Total Fare:</strong> ₹${currentTicket.totalFare}</p>
+          <p><strong>Date:</strong> ${currentTicket.date}</p>
+        `;
+
+        ticketSuccess.classList.remove("hidden");
+      }
+
+      // Pass booking functions
+      function previewPass() {
+        const gender = document.getElementById("gender").value;
+        const area = document.getElementById("area").value;
+        const idProof = document.getElementById("idProof").value;
+
+        if (!idProof || idProof.length !== 4 || !/^\d+$/.test(idProof)) {
+          alert("Please enter last 4 digits of your ID proof");
+          return;
+        }
+
+        let fare = 40;
+        switch (area) {
+          case "PMC":
+          case "PCMC":
+            fare = 40;
+            break;
+          case "Both":
+            fare = 50;
+            break;
+          case "All":
+            fare = 70;
+            break;
+        }
+
+        currentPass = {
+          gender,
+          area,
+          fare,
+          idProof,
+          date: new Date().toLocaleString(),
+        };
+
+        // Update preview
+        document.getElementById("previewGender").textContent = gender;
+        document.getElementById("previewArea").textContent = area;
+        document.getElementById("previewFare").textContent = `₹${fare}`;
+        document.getElementById("previewIdProof").textContent = idProof;
+
+        // Show preview and password input
+        document.getElementById("passPreview").classList.remove("hidden");
+        document
+          .getElementById("passPasswordContainer")
+          .classList.remove("hidden");
+      }
+
+      function confirmPassBooking() {
+        const password = document.getElementById("passPassword").value;
+
+        if (password !== "1173") {
+          alert("Incorrect password. Please try again.");
+          return;
+        }
+
+        if (!currentPass) return;
+
+        // Save pass to localStorage
+        savePass(currentPass);
+
+        // Show success message
+        document
+          .getElementById("passContent")
+          .querySelectorAll(".hidden")
+          .forEach((el) => {
+            el.classList.add("hidden");
+          });
+
+        const passSuccess = document.getElementById("passSuccess");
+        const passDetails = document.getElementById("passDetails");
+
+        passDetails.innerHTML = `
+          <p><strong>Gender:</strong> ${currentPass.gender}</p>
+          <p><strong>Area:</strong> ${currentPass.area}</p>
+          <p><strong>Fare:</strong> ₹${currentPass.fare}</p>
+          <p><strong>ID Proof:</strong> ****${currentPass.idProof}</p>
+          <p><strong>Date:</strong> ${currentPass.date}</p>
+        `;
+
+        passSuccess.classList.remove("hidden");
+      }
+
+      // LocalStorage functions
+      function saveTicket(ticket) {
+        let tickets = JSON.parse(localStorage.getItem("pmpmlTickets")) || [];
+        tickets.push(ticket);
+        localStorage.setItem("pmpmlTickets", JSON.stringify(tickets));
+      }
+
+      function savePass(pass) {
+        let passes = JSON.parse(localStorage.getItem("pmpmlPasses")) || [];
+        passes.push(pass);
+        localStorage.setItem("pmpmlPasses", JSON.stringify(passes));
+      }
+
+      function loadSavedTickets() {
+        // This would be called when the My Tickets section is loaded
+        // Actual loading happens in displaySavedTickets()
+      }
+
+      function displaySavedTickets() {
+        const ticketsList = document.getElementById("ticketsList");
+        const tickets = JSON.parse(localStorage.getItem("pmpmlTickets")) || [];
+        const passes = JSON.parse(localStorage.getItem("pmpmlPasses")) || [];
+
+        ticketsList.innerHTML = "";
+
+        if (tickets.length === 0 && passes.length === 0) {
+          ticketsList.innerHTML =
+            '<p class="no-tickets">No tickets or passes found.</p>';
+          return;
+        }
+
+        if (tickets.length > 0) {
+          const heading = document.createElement("h3");
+          heading.textContent = "Your Tickets";
+          ticketsList.appendChild(heading);
+
+          tickets.forEach((ticket, index) => {
+            const ticketCard = document.createElement("div");
+            ticketCard.className = "bus-card";
+            ticketCard.innerHTML = `
+              <h3>${ticket.busName}</h3>
+              <p><strong>From:</strong> ${ticket.boardingStop}</p>
+              <p><strong>To:</strong> ${ticket.destinationStop}</p>
+              <p><strong>Passengers:</strong> ${ticket.adults}</p>
+              <p><strong>Total Fare:</strong> ₹${ticket.totalFare}</p>
+              <p><strong>Date:</strong> ${ticket.date}</p>
+              <button onclick="deleteTicket(${index})" class="delete-btn">Delete</button>
+            `;
+            ticketsList.appendChild(ticketCard);
+          });
+        }
+
+        if (passes.length > 0) {
+          const heading = document.createElement("h3");
+          heading.textContent = "Your Passes";
+          ticketsList.appendChild(heading);
+
+          passes.forEach((pass, index) => {
+            const passCard = document.createElement("div");
+            passCard.className = "bus-card";
+            passCard.innerHTML = `
+              <h3>Daily Pass</h3>
+              <p><strong>Area:</strong> ${pass.area}</p>
+              <p><strong>Fare:</strong> ₹${pass.fare}</p>
+              <p><strong>ID Proof:</strong> ****${pass.idProof}</p>
+              <p><strong>Date:</strong> ${pass.date}</p>
+              <button onclick="deletePass(${index})" class="delete-btn">Delete</button>
+            `;
+            ticketsList.appendChild(passCard);
+          });
+        }
+      }
+
+      function deleteTicket(index) {
+        let tickets = JSON.parse(localStorage.getItem("pmpmlTickets")) || [];
+        if (index >= 0 && index < tickets.length) {
+          tickets.splice(index, 1);
+          localStorage.setItem("pmpmlTickets", JSON.stringify(tickets));
+          displaySavedTickets();
+        }
+      }
+
+      function deletePass(index) {
+        let passes = JSON.parse(localStorage.getItem("pmpmlPasses")) || [];
+        if (index >= 0 && index < passes.length) {
+          passes.splice(index, 1);
+          localStorage.setItem("pmpmlPasses", JSON.stringify(passes));
+          displaySavedTickets();
+        }
+      }
+
+      // Sample dataset (would normally be in a separate file)
+      const stops = [
+        "Shivajinagar",
+        "Swargate",
+        "Pune Station",
+        "Kothrud Depot",
+        "Katraj",
+        "Hinjewadi",
+        "Wakad",
+        "Pimpri",
+        "Chinchwad",
+        "Nigdi",
+        "Akurdi",
+        "Ravet",
+        "Moshi",
+        "Bhosari",
+        "Dapodi",
+        "Khadki",
+        "Deccan",
+        "FC Road",
+        "JM Road",
+        "Sinhagad Road",
+      ];
+
+      const availableBuses = [
+        {
+          name: "Bus 101",
+          route: ["Shivajinagar", "Pune Station", "Kothrud Depot", "Katraj"],
+          fares: {
+            "Shivajinagar-Pune Station": 10,
+            "Pune Station-Kothrud Depot": 12,
+            "Kothrud Depot-Katraj": 15,
+            "Shivajinagar-Katraj": 25,
+          },
+        },
+        {
+          name: "Bus 102",
+          route: ["Swargate", "Pune Station", "Deccan", "Kothrud Depot"],
+          fares: {
+            "Swargate-Pune Station": 8,
+            "Pune Station-Deccan": 10,
+            "Deccan-Kothrud Depot": 12,
+            "Swargate-Kothrud Depot": 20,
+          },
+        },
+        {
+          name: "Bus 103",
+          route: ["Hinjewadi", "Wakad", "Pimpri", "Chinchwad", "Nigdi"],
+          fares: {
+            "Hinjewadi-Wakad": 10,
+            "Wakad-Pimpri": 12,
+            "Pimpri-Chinchwad": 8,
+            "Chinchwad-Nigdi": 10,
+            "Hinjewadi-Nigdi": 30,
+          },
+        },
+        {
+          name: "Bus 104",
+          route: ["Shivajinagar", "FC Road", "JM Road", "Sinhagad Road"],
+          fares: {
+            "Shivajinagar-FC Road": 10,
+            "FC Road-JM Road": 8,
+            "JM Road-Sinhagad Road": 12,
+            "Shivajinagar-Sinhagad Road": 25,
+          },
+        },
+      ];
+    </script>
+  </body>
+</html>
