@@ -2,6 +2,9 @@
 include 'db.php';
 session_start();
 
+// Set header for JSON response
+header('Content-Type: application/json');
+
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $email = trim($_POST['email']);
     $password = $_POST['password'];
@@ -10,15 +13,20 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $static_email = 'admin@example.com';
     $static_password = 'admin123'; // plain text for this example
 
-    // ✅ 1. Check against static user first
+    // Check against static user first
     if ($email === $static_email && $password === $static_password) {
         $_SESSION['user_id'] = 0; // use 0 or -1 for static/fake user
         $_SESSION['user_name'] = 'Static Admin';
-        header("Location: ../backend/dashboard.php");
+        
+        // Return JSON response instead of redirect
+        echo json_encode([
+            'success' => true,
+            'redirect' => '../backend/dashboard.php'
+        ]);
         exit();
     }
 
-    // ✅ 2. Else fallback to DB user check
+    // Else fallback to DB user check
     $stmt = $conn->prepare("SELECT id, name, password FROM users WHERE email = ?");
     $stmt->bind_param("s", $email);
     $stmt->execute();
@@ -31,13 +39,34 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         if (password_verify($password, $hashed_password)) {
             $_SESSION['user_id'] = $id;
             $_SESSION['user_name'] = $name;
-            header("Location: ../backend/dashboard.php");
+            
+            // Return JSON response instead of redirect
+            echo json_encode([
+                'success' => true,
+                'redirect' => '../backend/dashboard.php'
+            ]);
             exit();
         } else {
-            echo "Invalid credentials.";
+            // Return JSON error
+            echo json_encode([
+                'success' => false,
+                'message' => 'Invalid credentials'
+            ]);
+            exit();
         }
     } else {
-        echo "User not found.";
+        // Return JSON error
+        echo json_encode([
+            'success' => false,
+            'message' => 'User not found'
+        ]);
+        exit();
     }
 }
+
+// If request method is not POST
+echo json_encode([
+    'success' => false,
+    'message' => 'Invalid request method'
+]);
 ?>
